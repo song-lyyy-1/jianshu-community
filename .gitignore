@@ -1,0 +1,14 @@
+# 后端
+jianshu-backend/target/
+
+# 前端
+jianshu-frontend/node_modules/
+jianshu-frontend/dist/
+
+# 压缩包
+*.zip
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.log
