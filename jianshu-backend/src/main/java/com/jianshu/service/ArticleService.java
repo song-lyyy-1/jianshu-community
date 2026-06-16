@@ -10,7 +10,7 @@ public interface ArticleService {
 
     IPage<Map<String, Object>> getArticleList(int page, int size, String keyword);
 
-    Map<String, Object> getArticleDetail(Long id, Long currentUserId);
+    Map<String, Object> getArticleDetail(Long id, Long currentUserId, boolean skipView);
 
     Long createArticle(Long userId, ArticleDTO articleDTO);
 

@@ -30,10 +30,11 @@ public class ArticleController {
     }
 
     @GetMapping("/detail/{id}")
-    public Result<Map<String, Object>> detail(@PathVariable Long id) {
+    public Result<Map<String, Object>> detail(@PathVariable Long id,
+                                               @RequestParam(required = false, defaultValue = "false") boolean skipView) {
         Long currentUserId = UserContext.getUserId();
         try {
-            Map<String, Object> data = articleService.getArticleDetail(id, currentUserId);
+            Map<String, Object> data = articleService.getArticleDetail(id, currentUserId, skipView);
             return Result.success(data);
         } catch (RuntimeException e) {
             return Result.error(404, e.getMessage());

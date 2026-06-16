@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken, removeToken } from '@/utils/auth'
+import { getToken, removeToken, removeUserInfo } from '@/utils/auth'
 import { showToast } from 'vant'
 import router from '@/router'
 
@@ -35,8 +35,11 @@ request.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       removeToken()
+      removeUserInfo()
       showToast('登录已过期，请重新登录')
-      router.push('/login')
+      if (router.currentRoute.value.path !== '/login') {
+        router.push({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
+      }
     } else {
       showToast(error.response?.data?.message || '网络错误')
     }

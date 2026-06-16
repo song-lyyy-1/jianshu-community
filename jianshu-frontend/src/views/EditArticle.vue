@@ -5,7 +5,7 @@
       <van-field
         v-model="title"
         placeholder="请输入标题"
-        border={false}
+        :border="false"
         class="title-field"
       />
     </div>
@@ -56,7 +56,7 @@ const toolbars = [
 onMounted(async () => {
   if (isEdit.value) {
     try {
-      const res = await getArticleDetail(route.params.id)
+      const res = await getArticleDetail(route.params.id, { skipView: true })
       title.value = res.data.title || ''
       content.value = res.data.content || ''
     } catch {
@@ -85,9 +85,7 @@ async function save(status) {
     if (isEdit.value) {
       await updateArticle(route.params.id, data)
       showToast(status === 1 ? '发布成功' : '草稿已保存')
-      if (status === 1) {
-        router.replace(`/article/${route.params.id}`)
-      }
+      router.back()
     } else {
       const res = await createArticle(data)
       showToast(status === 1 ? '发布成功' : '草稿已保存')

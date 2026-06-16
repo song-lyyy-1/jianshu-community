@@ -25,14 +25,17 @@ public class UserController {
         User user = userService.getUserById(userId);
         Map<String, Object> stats = userService.getUserStats(userId);
 
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("id", user.getId());
+        userMap.put("username", user.getUsername());
+        userMap.put("nickname", user.getNickname());
+        userMap.put("avatar", user.getAvatar());
+        userMap.put("email", user.getEmail());
+        userMap.put("bio", user.getBio());
+        userMap.put("createdAt", user.getCreatedAt());
+
         Map<String, Object> data = new HashMap<>();
-        data.put("id", user.getId());
-        data.put("username", user.getUsername());
-        data.put("nickname", user.getNickname());
-        data.put("avatar", user.getAvatar());
-        data.put("email", user.getEmail());
-        data.put("bio", user.getBio());
-        data.put("createdAt", user.getCreatedAt());
+        data.put("user", userMap);
         data.put("stats", stats);
         return Result.success(data);
     }

@@ -65,12 +65,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { getArticleDetail } from '@/api/article'
 import { toggleLike } from '@/api/like'
 import { toggleFavorite } from '@/api/favorite'
 import { getCommentList, addComment } from '@/api/comment'
+import { useUserStore } from '@/stores/user'
 import { showToast } from 'vant'
 import NavBar from '@/components/NavBar.vue'
 import MarkdownRender from '@/components/MarkdownRender.vue'
@@ -78,6 +79,8 @@ import CommentItem from '@/components/CommentItem.vue'
 import EmptyState from '@/components/EmptyState.vue'
 
 const route = useRoute()
+const router = useRouter()
+const userStore = useUserStore()
 const article = ref(null)
 const isLiked = ref(false)
 const isFavorited = ref(false)
@@ -85,8 +88,8 @@ const commentList = ref([])
 const commentText = ref('')
 const commentSectionRef = ref(null)
 
-onMounted(async () => {
-  const id = route.params.id
+async function loadArticle(id) {
+  article.value = null
   try {
     const res = await getArticleDetail(id)
     article.value = res.data
@@ -95,6 +98,17 @@ onMounted(async () => {
     loadComments()
   } catch {
     showToast('文章加载失败')
+  }
+}
+
+onMounted(() => {
+  loadArticle(route.params.id)
+})
+
+// 路由参数变化时重新加载
+watch(() => route.params.id, (newId) => {
+  if (newId) {
+    loadArticle(newId)
   }
 })
 
@@ -107,12 +121,23 @@ async function loadComments() {
   }
 }
 
+function requireLogin() {
+  if (!userStore.isLogin) {
+    showToast('请先登录')
+    router.push({ path: '/login', query: { redirect: route.fullPath } })
+    return true
+  }
+  return false
+}
+
 async function handleLike() {
+  if (requireLogin()) return
   try {
     const res = await toggleLike(route.params.id)
-    isLiked.value = res.data?.liked ?? !isLiked.value
+    const wasLiked = isLiked.value
+    isLiked.value = res.data?.liked ?? !wasLiked
     if (article.value) {
-      article.value.likeCount = res.data?.likeCount ?? article.value.likeCount
+      article.value.likeCount = res.data?.likeCount ?? (article.value.likeCount + (isLiked.value ? 1 : -1))
     }
   } catch {
     // error handled by interceptor
@@ -120,11 +145,13 @@ async function handleLike() {
 }
 
 async function handleFavorite() {
+  if (requireLogin()) return
   try {
     const res = await toggleFavorite(route.params.id)
-    isFavorited.value = res.data?.favorited ?? !isFavorited.value
+    const wasFavorited = isFavorited.value
+    isFavorited.value = res.data?.favorited ?? !wasFavorited
     if (article.value) {
-      article.value.favoriteCount = res.data?.favoriteCount ?? article.value.favoriteCount
+      article.value.favoriteCount = res.data?.favoriteCount ?? (article.value.favoriteCount + (isFavorited.value ? 1 : -1))
     }
   } catch {
     // error handled by interceptor
@@ -132,6 +159,7 @@ async function handleFavorite() {
 }
 
 async function handleComment() {
+  if (requireLogin()) return
   if (!commentText.value.trim()) {
     showToast('请输入评论内容')
     return
@@ -140,6 +168,10 @@ async function handleComment() {
     await addComment({ articleId: Number(route.params.id), content: commentText.value })
     commentText.value = ''
     showToast('评论成功')
+    // 更新评论计数
+    if (article.value) {
+      article.value.commentCount = (article.value.commentCount || 0) + 1
+    }
     loadComments()
   } catch {
     // error handled by interceptor

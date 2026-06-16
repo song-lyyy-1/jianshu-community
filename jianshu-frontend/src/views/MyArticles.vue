@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onActivated } from 'vue'
 import { useRouter } from 'vue-router'
 import { getMyArticles, deleteArticle } from '@/api/article'
 import { showDialog, showToast } from 'vant'
@@ -53,6 +53,15 @@ const refreshing = ref(false)
 const finished = ref(false)
 const page = ref(1)
 const activeTab = ref(0)
+const needRefresh = ref(false)
+
+// 从编辑页返回时刷新
+onActivated(() => {
+  if (needRefresh.value) {
+    needRefresh.value = false
+    onRefresh()
+  }
+})
 
 function getStatusParam() {
   if (activeTab.value === 1) return 1
@@ -94,11 +103,11 @@ function onTabChange() {
   page.value = 1
   articleList.value = []
   finished.value = false
-  loading.value = true
-  onLoad()
+  // 不需要手动设 loading 和调用 onLoad，van-list 会自动触发
 }
 
 function goEdit(id) {
+  needRefresh.value = true
   router.push(`/edit/${id}`)
 }
 

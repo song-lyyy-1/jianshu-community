@@ -81,20 +81,33 @@ const router = createRouter({
 })
 
 // 路由守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // 设置页面标题
   if (to.meta.title) {
     document.title = to.meta.title + ' - 简书问答'
   }
 
-  // 需要认证但未登录
-  if (to.meta.requireAuth) {
-    const token = localStorage.getItem('jianshu_token')
-    if (!token) {
-      next({ path: '/login', query: { redirect: to.fullPath } })
-      return
-    }
+  const token = localStorage.getItem('jianshu_token')
+
+  // 同步 userStore 状态（处理 401 清 token 后 store 不同步的问题）
+  const { useUserStore } = await import('@/stores/user')
+  const userStore = useUserStore()
+  if (!token && userStore.token) {
+    userStore.logout()
   }
+
+  // 需要认证但未登录
+  if (to.meta.requireAuth && !token) {
+    next({ path: '/login', query: { redirect: to.fullPath } })
+    return
+  }
+
+  // 已登录用户访问登录/注册页，重定向到首页
+  if (token && (to.path === '/login' || to.path === '/register')) {
+    next({ path: '/' })
+    return
+  }
+
   next()
 })
 

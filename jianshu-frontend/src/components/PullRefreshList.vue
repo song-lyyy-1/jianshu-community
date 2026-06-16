@@ -54,7 +54,6 @@ async function onRefresh() {
   page.value = 1
   list.value = []
   finished.value = false
-  loading.value = true
   await onLoad()
   refreshing.value = false
 }

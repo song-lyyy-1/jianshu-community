@@ -53,17 +53,19 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Map<String, Object> getArticleDetail(Long id, Long currentUserId) {
+    public Map<String, Object> getArticleDetail(Long id, Long currentUserId, boolean skipView) {
         Article article = articleMapper.selectById(id);
         if (article == null) {
             throw new RuntimeException("文章不存在");
         }
 
-        // 浏览数+1
-        articleMapper.update(null,
-                new LambdaUpdateWrapper<Article>().eq(Article::getId, id)
-                        .setSql("view_count = view_count + 1")
-        );
+        // 浏览数+1（编辑模式下不计数）
+        if (!skipView) {
+            articleMapper.update(null,
+                    new LambdaUpdateWrapper<Article>().eq(Article::getId, id)
+                            .setSql("view_count = view_count + 1")
+            );
+        }
 
         // 查询当前用户的点赞/收藏状态
         boolean liked = false;

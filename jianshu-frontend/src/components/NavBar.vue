@@ -4,12 +4,14 @@
     :left-arrow="leftArrow"
     fixed
     placeholder
-    @click-left="$emit('clickLeft')"
+    @click-left="handleClickLeft"
   />
 </template>
 
 <script setup>
-defineProps({
+import { useRouter } from 'vue-router'
+
+const props = defineProps({
   title: {
     type: String,
     default: ''
@@ -17,10 +19,22 @@ defineProps({
   leftArrow: {
     type: Boolean,
     default: true
+  },
+  useDefaultBack: {
+    type: Boolean,
+    default: true
   }
 })
 
-defineEmits(['clickLeft'])
+const emit = defineEmits(['clickLeft'])
+const router = useRouter()
+
+function handleClickLeft() {
+  emit('clickLeft')
+  if (props.useDefaultBack) {
+    router.back()
+  }
+}
 </script>
 
 <style>

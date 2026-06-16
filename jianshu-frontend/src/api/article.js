@@ -4,8 +4,8 @@ export function getArticleList(params) {
   return request.get('/article/list', { params })
 }
 
-export function getArticleDetail(id) {
-  return request.get(`/article/detail/${id}`)
+export function getArticleDetail(id, params) {
+  return request.get(`/article/detail/${id}`, { params })
 }
 
 export function createArticle(data) {

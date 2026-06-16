@@ -51,12 +51,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { register } from '@/api/auth'
 import { useUserStore } from '@/stores/user'
 import { showToast } from 'vant'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 
 const username = ref('')
@@ -75,7 +76,8 @@ async function handleRegister() {
     showToast('注册成功')
     // Auto login after register
     await userStore.login(username.value, password.value)
-    router.push('/')
+    const redirect = route.query.redirect || '/'
+    router.replace(redirect)
   } catch {
     // error handled by interceptor
   } finally {

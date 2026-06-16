@@ -53,17 +53,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { getProfile, getUserStats } from '@/api/user'
 import { showDialog } from 'vant'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 const stats = ref({})
 
-onMounted(async () => {
+async function loadProfileData() {
   if (userStore.isLogin) {
     try {
       const res = await getUserStats()
@@ -74,7 +75,7 @@ onMounted(async () => {
     try {
       const profileRes = await getProfile()
       if (profileRes.data?.user) {
-        userStore.userInfo = { ...userStore.userInfo, ...profileRes.data.user }
+        userStore.updateUserInfo(profileRes.data.user)
       }
       if (profileRes.data?.stats) {
         stats.value = profileRes.data.stats
@@ -82,6 +83,15 @@ onMounted(async () => {
     } catch {
       // ignore
     }
+  }
+}
+
+onMounted(loadProfileData)
+
+// 从子页面返回时重新加载数据
+watch(() => route.path, (newPath) => {
+  if (newPath === '/profile') {
+    loadProfileData()
   }
 })
 

@@ -96,8 +96,7 @@ function handleSearch() {
   articleList.value = []
   page.value = 1
   finished.value = false
-  loading.value = true
-  onLoad()
+  // van-list 渲染后会自动触发 @load，无需手动调用
 }
 
 function searchByTag(tag) {

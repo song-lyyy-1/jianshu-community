@@ -25,11 +25,17 @@ export const useUserStore = defineStore('user', () => {
     removeUserInfo()
   }
 
+  function updateUserInfo(info) {
+    userInfo.value = { ...userInfo.value, ...info }
+    setUserInfo(userInfo.value)
+  }
+
   return {
     token,
     userInfo,
     isLogin,
     login,
-    logout
+    logout,
+    updateUserInfo
   }
 })

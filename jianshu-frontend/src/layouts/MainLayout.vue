@@ -12,13 +12,24 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const activeTab = ref(0)
+const activeTab = ref('/')
 
 const showTabBar = computed(() => !route.meta.hideTabBar)
+
+// 根据当前路由路径同步 tab 激活状态
+watch(() => route.path, (path) => {
+  if (path === '/' || path === '') {
+    activeTab.value = '/'
+  } else if (path.startsWith('/edit')) {
+    activeTab.value = '/edit'
+  } else if (path.startsWith('/profile') || path.startsWith('/my/')) {
+    activeTab.value = '/profile'
+  }
+}, { immediate: true })
 </script>
 
 <style scoped>

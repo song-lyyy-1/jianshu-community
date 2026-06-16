@@ -56,7 +56,7 @@ async function handleLogin() {
     await userStore.login(username.value, password.value)
     showToast('登录成功')
     const redirect = route.query.redirect || '/'
-    router.push(redirect)
+    router.replace(redirect)
   } catch {
     // error handled by interceptor
   } finally {
