@@ -31,8 +31,6 @@ public class Article {
 
     private Integer favoriteCount;
 
-    private Integer commentCount;
-
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
 

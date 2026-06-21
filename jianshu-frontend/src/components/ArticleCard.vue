@@ -14,7 +14,6 @@
           <span class="stat-item"><van-icon name="eye-o" /> {{ article.viewCount || 0 }}</span>
           <span class="stat-item"><van-icon name="like-o" /> {{ article.likeCount || 0 }}</span>
           <span class="stat-item"><van-icon name="star-o" /> {{ article.favoriteCount || 0 }}</span>
-          <span class="stat-item"><van-icon name="chat-o" /> {{ article.commentCount || 0 }}</span>
         </div>
       </div>
     </div>

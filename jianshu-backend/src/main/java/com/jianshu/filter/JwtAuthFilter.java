@@ -27,8 +27,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             "/api/auth/login",
             "/api/auth/register",
             "/api/article/list",
-            "/api/article/detail/*",
-            "/api/comment/list/*"
+            "/api/article/detail/*"
     );
 
     public JwtAuthFilter(JwtUtil jwtUtil, ObjectMapper objectMapper) {

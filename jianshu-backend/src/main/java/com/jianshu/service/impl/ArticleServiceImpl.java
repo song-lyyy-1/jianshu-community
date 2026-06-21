@@ -176,13 +176,13 @@ public class ArticleServiceImpl implements ArticleService {
         map.put("id", article.getId());
         map.put("userId", article.getUserId());
         map.put("title", article.getTitle());
+        map.put("content", article.getContent());
         map.put("summary", article.getSummary());
         map.put("coverImage", article.getCoverImage());
         map.put("status", article.getStatus());
         map.put("viewCount", article.getViewCount());
         map.put("likeCount", article.getLikeCount());
         map.put("favoriteCount", article.getFavoriteCount());
-        map.put("commentCount", article.getCommentCount());
         map.put("createdAt", article.getCreatedAt());
         map.put("updatedAt", article.getUpdatedAt());
         return map;

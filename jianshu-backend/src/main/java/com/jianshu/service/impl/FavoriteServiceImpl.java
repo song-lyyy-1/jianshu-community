@@ -98,7 +98,6 @@ public class FavoriteServiceImpl implements FavoriteService {
             map.put("viewCount", article.getViewCount());
             map.put("likeCount", article.getLikeCount());
             map.put("favoriteCount", article.getFavoriteCount());
-            map.put("commentCount", article.getCommentCount());
             map.put("createdAt", article.getCreatedAt());
 
             User author = userMapper.selectById(article.getUserId());

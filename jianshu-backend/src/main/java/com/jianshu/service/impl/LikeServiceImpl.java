@@ -100,7 +100,6 @@ public class LikeServiceImpl implements LikeService {
             map.put("viewCount", article.getViewCount());
             map.put("likeCount", article.getLikeCount());
             map.put("favoriteCount", article.getFavoriteCount());
-            map.put("commentCount", article.getCommentCount());
             map.put("createdAt", article.getCreatedAt());
 
             // 作者信息

@@ -14,13 +14,12 @@
         </div>
       </div>
       <div class="article-body">
-        <MarkdownRender :content="article.content" />
+        <div class="article-content">{{ article.content }}</div>
       </div>
       <div class="stats-row">
         <span class="stat"><van-icon name="eye-o" /> {{ article.viewCount || 0 }}</span>
         <span class="stat"><van-icon name="like-o" /> {{ article.likeCount || 0 }}</span>
         <span class="stat"><van-icon name="star-o" /> {{ article.favoriteCount || 0 }}</span>
-        <span class="stat"><van-icon name="chat-o" /> {{ article.commentCount || 0 }}</span>
       </div>
       <div class="action-row">
         <div class="action-btn" :class="{ active: isLiked }" @click="handleLike">
@@ -30,31 +29,6 @@
         <div class="action-btn" :class="{ active: isFavorited }" @click="handleFavorite">
           <van-icon :name="isFavorited ? 'star' : 'star-o'" />
           <span>{{ isFavorited ? '已藏' : '收藏' }}</span>
-        </div>
-        <div class="action-btn" @click="scrollToComment">
-          <van-icon name="chat-o" />
-          <span>评论</span>
-        </div>
-      </div>
-      <div class="comment-section" ref="commentSectionRef">
-        <h3 class="comment-title">评论 ({{ article.commentCount || 0 }})</h3>
-        <div class="comment-input">
-          <van-field
-            v-model="commentText"
-            placeholder="写下你的评论..."
-            rows="2"
-            type="textarea"
-            autosize
-          />
-          <van-button type="primary" size="small" class="send-btn" @click="handleComment">发送</van-button>
-        </div>
-        <div class="comment-list">
-          <CommentItem
-            v-for="comment in commentList"
-            :key="comment.id"
-            :comment="comment"
-          />
-          <EmptyState v-if="!commentList.length" text="暂无评论，快来抢沙发" icon="chat-o" />
         </div>
       </div>
     </template>
@@ -70,13 +44,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { getArticleDetail } from '@/api/article'
 import { toggleLike } from '@/api/like'
 import { toggleFavorite } from '@/api/favorite'
-import { getCommentList, addComment } from '@/api/comment'
 import { useUserStore } from '@/stores/user'
 import { showToast } from 'vant'
 import NavBar from '@/components/NavBar.vue'
-import MarkdownRender from '@/components/MarkdownRender.vue'
-import CommentItem from '@/components/CommentItem.vue'
-import EmptyState from '@/components/EmptyState.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -84,9 +54,6 @@ const userStore = useUserStore()
 const article = ref(null)
 const isLiked = ref(false)
 const isFavorited = ref(false)
-const commentList = ref([])
-const commentText = ref('')
-const commentSectionRef = ref(null)
 
 async function loadArticle(id) {
   article.value = null
@@ -95,7 +62,6 @@ async function loadArticle(id) {
     article.value = res.data
     isLiked.value = res.data.liked || false
     isFavorited.value = res.data.favorited || false
-    loadComments()
   } catch {
     showToast('文章加载失败')
   }
@@ -111,15 +77,6 @@ watch(() => route.params.id, (newId) => {
     loadArticle(newId)
   }
 })
-
-async function loadComments() {
-  try {
-    const res = await getCommentList(route.params.id)
-    commentList.value = res.data || []
-  } catch {
-    // ignore
-  }
-}
 
 function requireLogin() {
   if (!userStore.isLogin) {
@@ -156,30 +113,6 @@ async function handleFavorite() {
   } catch {
     // error handled by interceptor
   }
-}
-
-async function handleComment() {
-  if (requireLogin()) return
-  if (!commentText.value.trim()) {
-    showToast('请输入评论内容')
-    return
-  }
-  try {
-    await addComment({ articleId: Number(route.params.id), content: commentText.value })
-    commentText.value = ''
-    showToast('评论成功')
-    // 更新评论计数
-    if (article.value) {
-      article.value.commentCount = (article.value.commentCount || 0) + 1
-    }
-    loadComments()
-  } catch {
-    // error handled by interceptor
-  }
-}
-
-function scrollToComment() {
-  commentSectionRef.value?.scrollIntoView({ behavior: 'smooth' })
 }
 
 function formatTime(time) {
@@ -256,6 +189,14 @@ function formatTime(time) {
   padding: 16px;
 }
 
+.article-content {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #2f2f2f;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .stats-row {
   display: flex;
   gap: 20px;
@@ -295,39 +236,6 @@ function formatTime(time) {
 
 .action-btn.active {
   color: var(--jianshu-red);
-}
-
-.comment-section {
-  padding: 16px;
-}
-
-.comment-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 14px;
-}
-
-.comment-input {
-  display: flex;
-  gap: 10px;
-  align-items: flex-end;
-  margin-bottom: 16px;
-}
-
-.comment-input .van-field {
-  flex: 1;
-  background: #f7f8fa;
-  border-radius: 8px;
-}
-
-.send-btn {
-  flex-shrink: 0;
-  background: var(--jianshu-red);
-  border-color: var(--jianshu-red);
-}
-
-.comment-list {
-  margin-top: 8px;
 }
 
 .loading-center {

@@ -9,8 +9,15 @@
         class="title-field"
       />
     </div>
-    <div class="editor-wrapper">
-      <MdEditor v-model="content" :toolbars="toolbars" />
+    <div class="content-input">
+      <van-field
+        v-model="content"
+        type="textarea"
+        placeholder="请输入博文内容..."
+        :border="false"
+        autosize
+        class="content-field"
+      />
     </div>
     <div class="bottom-bar">
       <van-button plain class="draft-btn" @click="save(0)" :loading="submitting">保存草稿</van-button>
@@ -22,8 +29,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { MdEditor } from 'md-editor-v3'
-import 'md-editor-v3/lib/style.css'
 import { createArticle, updateArticle, getArticleDetail } from '@/api/article'
 import { showToast } from 'vant'
 import NavBar from '@/components/NavBar.vue'
@@ -36,22 +41,6 @@ const content = ref('')
 const submitting = ref(false)
 
 const isEdit = computed(() => !!route.params.id)
-
-const toolbars = [
-  'bold', 'underline', 'italic', 'strikeThrough',
-  '-',
-  'title', 'sub', 'sup', 'quote',
-  '-',
-  'unorderedList', 'orderedList', 'task',
-  '-',
-  'codeRow', 'code',
-  '-',
-  'link', 'image',
-  '-',
-  'revoke', 'next',
-  '=',
-  'preview', 'previewOnly'
-]
 
 onMounted(async () => {
   if (isEdit.value) {
@@ -136,9 +125,20 @@ async function save(status) {
   padding: 12px 16px;
 }
 
-.editor-wrapper {
+.content-input {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+}
+
+.content-field {
+  padding: 0;
+}
+
+.content-field :deep(.van-field__control) {
+  font-size: 15px;
+  line-height: 1.8;
+  min-height: 300px;
+  padding: 16px;
 }
 
 .bottom-bar {

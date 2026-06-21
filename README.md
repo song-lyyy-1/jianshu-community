@@ -14,13 +14,13 @@
 ## 功能清单
 
 - ✅ 首页（博文列表，下拉刷新+上拉加载+搜索）
-- ✅ 博文详情（Markdown渲染 + 点赞/收藏/评论）
+- ✅ 博文详情（纯文本渲染 + 点赞/收藏）
 - ✅ 登录/注册（JWT Token认证）
 - ✅ 个人中心（统计：文章数、浏览量、点赞量、收藏量）
 - ✅ 我的博文列表（全部/已发布/草稿筛选）
 - ✅ 我点赞的博文列表
 - ✅ 我收藏的博文列表
-- ✅ 发表博文（Markdown编辑器 + 草稿功能）
+- ✅ 发表博文（纯文本编辑 + 草稿功能）
 
 ## 快速启动
 
@@ -70,8 +70,8 @@ npx vite --host 0.0.0.0 --port 5173
 jianshu-community/
 ├── jianshu-frontend/          # Vue3前端
 │   ├── src/
-│   │   ├── api/               # 6个API模块
-│   │   ├── components/        # 6个可复用组件
+│   │   ├── api/               # 5个API模块
+│   │   ├── components/        # 5个可复用组件
 │   │   ├── layouts/           # 主布局+TabBar
 │   │   ├── router/            # 11条路由+守卫
 │   │   ├── stores/            # Pinia状态管理
@@ -86,17 +86,17 @@ jianshu-community/
 ├── jianshu-backend/           # Spring Boot后端
 │   ├── src/main/java/com/jianshu/
 │   │   ├── config/            # CORS + MyBatis-Plus + JWT注册
-│   │   ├── controller/        # 6个Controller(17个接口)
-│   │   ├── entity/            # 5个Entity
-│   │   ├── mapper/            # 5个Mapper
-│   │   ├── service/           # 5个Service+Impl
+│   │   ├── controller/        # 5个Controller(15个接口)
+│   │   ├── entity/            # 4个Entity
+│   │   ├── mapper/            # 4个Mapper
+│   │   ├── service/           # 4个Service+Impl
 │   │   ├── dto/               # Result + Login/Register/Article DTO
 │   │   ├── filter/            # JWT认证过滤器
 │   │   ├── util/              # JwtUtil + UserContext
 │   │   └── JianshuApplication.java
 │   ├── src/main/resources/
 │   │   ├── application.yml    # MySQL + JWT + MyBatis-Plus配置
-│   │   └── sql/init.sql       # 5张表DDL + 测试数据
+│   │   └── sql/init.sql       # 4张表DDL + 测试数据
 │   └── pom.xml
 │
 └── README.md
@@ -118,16 +118,13 @@ jianshu-community/
 | 点赞 | GET | /api/like/my | 我点赞的博文 |
 | 收藏 | POST | /api/favorite/toggle/{id} | 收藏/取消切换 |
 | 收藏 | GET | /api/favorite/my | 我收藏的博文 |
-| 评论 | GET | /api/comment/list/{id} | 评论列表 |
-| 评论 | POST | /api/comment/add | 发表评论 |
 | 用户 | GET | /api/user/profile | 个人中心 |
 | 用户 | GET | /api/user/stats | 统计数据 |
 | 用户 | PUT | /api/user/update | 更新个人信息 |
 
-## 数据库设计（5张核心表）
+## 数据库设计（4张核心表）
 
 - **user** — 用户表(用户名BCrypt密码+昵称头像简介)
-- **article** — 博文表(标题+Markdown内容+摘要+状态0草稿/1已发布+冗余计数)
+- **article** — 博文表(标题+内容+摘要+状态0草稿/1已发布+冗余计数)
 - **article_like** — 点赞表(联合唯一索引user_id+article_id)
 - **article_favorite** — 收藏表(联合唯一索引user_id+article_id)
-- **comment** — 评论表(article_id索引)
