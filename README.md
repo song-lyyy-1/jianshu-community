@@ -6,7 +6,8 @@
 
 | 层面 | 技术 |
 |------|------|
-| 前端 | Vue3 + Vite + Vant4 + Vue Router + Pinia |
+| 前端(uni-app版) | uni-app + Vue3 + Pinia（HBuilderX直接运行） |
+| 前端(原版) | Vue3 + Vite + Vant4 + Vue Router + Pinia |
 | 后端 | Spring Boot 3.2 + MyBatis-Plus 3.5 + JWT |
 | 数据库 | MySQL 8.x |
 | 博文格式 | Markdown (md-editor-v3) |
@@ -48,6 +49,15 @@ mvn spring-boot:run
 
 ### 3. 启动前端
 
+#### 方式A：HBuilderX运行 uni-app 版（推荐）
+
+1. 用 HBuilderX 打开 `jianshu-uniapp` 文件夹
+2. 点击工具栏 **运行 → 运行到浏览器 → Chrome浏览器**（或内置浏览器）
+3. 自动打开浏览器，前端运行在 HBuilderX 内置服务器
+4. 前端通过 `http://localhost:8080/api` 直连后端，已配置跨域
+
+#### 方式B：命令行运行原版前端
+
 ```bash
 cd jianshu-frontend
 unset NODE_OPTIONS  # 如果遇到preload模块错误
@@ -68,7 +78,20 @@ npx vite --host 0.0.0.0 --port 5173
 
 ```
 jianshu-community/
-├── jianshu-frontend/          # Vue3前端
+├── jianshu-uniapp/             # uni-app前端（HBuilderX直接运行）
+│   ├── api/                    # 5个API模块
+│   ├── components/             # 3个组件(NavBar/ArticleCard/EmptyState)
+│   ├── pages/                  # 10个页面
+│   ├── stores/                 # Pinia状态管理
+│   ├── utils/                  # uni.request封装 + token工具
+│   ├── static/                 # tabBar图标
+│   ├── App.vue                 # 根组件 + 全局样式
+│   ├── main.js                 # 入口
+│   ├── pages.json              # 路由 + tabBar配置
+│   ├── manifest.json           # H5/小程序配置
+│   └── uni.scss                # SCSS变量
+│
+├── jianshu-frontend/          # Vue3前端（原版）
 │   ├── src/
 │   │   ├── api/               # 5个API模块
 │   │   ├── components/        # 5个可复用组件
