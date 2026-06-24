@@ -1,5 +1,7 @@
 <template>
   <view class="profile-page">
+    <NavBar title="我的" :leftArrow="false" />
+
     <!-- 已登录状态 -->
     <template v-if="userStore.isLogin">
       <view class="user-info card">
@@ -74,6 +76,7 @@ import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useUserStore } from '@/stores/user'
 import { getProfile, getUserStats } from '@/api/user'
+import NavBar from '@/components/NavBar.vue'
 
 const userStore = useUserStore()
 const stats = ref({})

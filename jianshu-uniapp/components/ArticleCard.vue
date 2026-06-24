@@ -7,15 +7,15 @@
       <view class="article-card__footer">
         <view class="article-card__author">
           <image
-            v-if="article.authorAvatar"
+            v-if="article.author && article.author.avatar"
             class="article-card__avatar"
-            :src="article.authorAvatar"
+            :src="article.author.avatar"
             mode="aspectFill"
           />
           <view v-else class="article-card__avatar article-card__avatar--default">
-            <text class="article-card__avatar-text">{{ (article.authorName || '匿名').charAt(0) }}</text>
+            <text class="article-card__avatar-text">{{ (article.author && (article.author.nickname || article.author.username) || '匿名').charAt(0) }}</text>
           </view>
-          <text class="article-card__name">{{ article.authorName || '匿名用户' }}</text>
+          <text class="article-card__name">{{ article.author && (article.author.nickname || article.author.username) || '匿名用户' }}</text>
         </view>
         <view class="article-card__stats">
           <text class="article-card__stat">👁 {{ article.viewCount || 0 }}</text>

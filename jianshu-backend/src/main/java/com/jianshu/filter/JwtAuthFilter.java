@@ -77,6 +77,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private void writeUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
+        // 手动添加 CORS 头，确保 Filter 层返回的 401 也能被前端跨域读取
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "*");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Max-Age", "3600");
+
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");
         Result<Object> result = Result.error(401, message);

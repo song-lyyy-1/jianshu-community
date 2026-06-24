@@ -112,6 +112,11 @@ public class FavoriteServiceImpl implements FavoriteService {
             return map;
         });
 
+        // 过滤掉null元素（文章已被删除的情况）
+        resultPage.setRecords(resultPage.getRecords().stream()
+                .filter(item -> item != null)
+                .collect(java.util.stream.Collectors.toList()));
+
         return resultPage;
     }
 }

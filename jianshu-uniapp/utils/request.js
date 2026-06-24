@@ -1,7 +1,11 @@
 import { getToken, removeToken, removeUserInfo } from '@/utils/auth'
 
-// 后端接口地址 — 直接连接后端，HBuilderX内置浏览器和小程序都能用
-const BASE_URL = 'http://localhost:8080/api'
+// 后端接口地址 — 根据运行平台动态切换：
+// H5 模式使用 devServer proxy（避免跨域），小程序/App 模式直连后端地址
+let BASE_URL = 'http://localhost:8080/api'
+// #ifdef H5
+BASE_URL = '/api'
+// #endif
 
 const TIMEOUT = 10000
 

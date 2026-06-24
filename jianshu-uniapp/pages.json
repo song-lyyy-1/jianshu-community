@@ -35,6 +35,7 @@
       "path": "pages/profile/profile",
       "style": {
         "navigationBarTitleText": "我的",
+        "navigationStyle": "custom",
         "navigationBarBackgroundColor": "#ffffff",
         "navigationBarTextStyle": "black"
       }

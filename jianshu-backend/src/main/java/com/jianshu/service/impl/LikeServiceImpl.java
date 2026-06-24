@@ -85,7 +85,7 @@ public class LikeServiceImpl implements LikeService {
                 .orderByDesc(ArticleLike::getCreatedAt);
         IPage<ArticleLike> likeIPage = articleLikeMapper.selectPage(likePage, likeQuery);
 
-        // 转换为文章信息Map
+        // 转换为文章信息Map，过滤掉文章已删除的null项
         IPage<Map<String, Object>> resultPage = likeIPage.convert(like -> {
             Article article = articleMapper.selectById(like.getArticleId());
             if (article == null) {
@@ -114,6 +114,11 @@ public class LikeServiceImpl implements LikeService {
             map.put("likedAt", like.getCreatedAt());
             return map;
         });
+
+        // 过滤掉null元素（文章已被删除的情况）
+        resultPage.setRecords(resultPage.getRecords().stream()
+                .filter(item -> item != null)
+                .collect(java.util.stream.Collectors.toList()));
 
         return resultPage;
     }
