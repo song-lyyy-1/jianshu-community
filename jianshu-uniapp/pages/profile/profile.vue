@@ -14,8 +14,8 @@
           />
           <text v-else class="avatar-placeholder">👤</text>
         </view>
-        <text class="nickname">{{ userStore.userInfo?.nickname || userStore.userInfo?.username || '用户' }}</text>
-        <text class="bio">{{ userStore.userInfo?.bio || '这个人很懒，什么都没写...' }}</text>
+        <text class="nickname">{{ (userStore.userInfo && (userStore.userInfo.nickname || userStore.userInfo.username)) || '用户' }}</text>
+        <text class="bio">{{ (userStore.userInfo && userStore.userInfo.bio) || '这个人很懒，什么都没写...' }}</text>
       </view>
 
       <view class="stats-card card">

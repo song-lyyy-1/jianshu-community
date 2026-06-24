@@ -1,18 +1,20 @@
 <template>
-  <view class="nav-bar">
-    <view class="nav-bar__status" :style="{ height: statusBarHeight + 'px' }"></view>
-    <view class="nav-bar__content">
-      <view class="nav-bar__left" @click="onClickLeft">
-        <text v-if="leftArrow" class="nav-bar__arrow">‹</text>
-      </view>
-      <text class="nav-bar__title">{{ title }}</text>
-      <view class="nav-bar__right">
-        <slot name="right"></slot>
+  <view class="nav-bar-wrapper">
+    <view class="nav-bar">
+      <view class="nav-bar__status" :style="{ height: statusBarHeight + 'px' }"></view>
+      <view class="nav-bar__content">
+        <view class="nav-bar__left" @click="onClickLeft">
+          <text v-if="leftArrow" class="nav-bar__arrow">‹</text>
+        </view>
+        <text class="nav-bar__title">{{ title }}</text>
+        <view class="nav-bar__right">
+          <slot name="right"></slot>
+        </view>
       </view>
     </view>
+    <!-- 占位，防止内容被导航栏遮挡 -->
+    <view class="nav-bar__placeholder" :style="{ height: (statusBarHeight + 44) + 'px' }"></view>
   </view>
-  <!-- 占位，防止内容被导航栏遮挡 -->
-  <view class="nav-bar__placeholder" :style="{ height: (statusBarHeight + 44) + 'px' }"></view>
 </template>
 
 <script setup>
