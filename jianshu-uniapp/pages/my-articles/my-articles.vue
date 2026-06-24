@@ -93,9 +93,9 @@ async function fetchPage() {
     const status = getStatusParam()
     if (status !== undefined) params.status = status
     const res = await getMyArticles(params)
-    const records = res.data?.records || []
+    const records = res.data && res.data.records || []
     articleList.value.push(...records)
-    const total = res.data?.total || 0
+    const total = res.data && res.data.total || 0
     if (articleList.value.length >= total || records.length < 10) {
       finished.value = true
     } else {

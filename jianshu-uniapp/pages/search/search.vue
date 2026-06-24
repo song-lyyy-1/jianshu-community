@@ -85,9 +85,9 @@ const hotTags = ['前端', 'Vue', 'React', 'Java', 'Python', '生活', '读书',
 async function fetchPage() {
   try {
     const res = await getArticleList({ page: page.value, size: 10, keyword: keyword.value })
-    const records = res.data?.records || []
+    const records = res.data && res.data.records || []
     articleList.value.push(...records)
-    const total = res.data?.total || 0
+    const total = res.data && res.data.total || 0
     if (articleList.value.length >= total || records.length < 10) {
       finished.value = true
     } else {

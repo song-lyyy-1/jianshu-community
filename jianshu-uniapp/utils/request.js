@@ -53,7 +53,7 @@ function request(options) {
         }
 
         if (statusCode >= 400) {
-          const msg = resData?.message || '请求失败'
+          var msg = (resData && resData.message) || '请求失败'
           uni.showToast({ title: msg, icon: 'none' })
           reject(new Error(msg))
           return

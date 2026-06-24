@@ -2,7 +2,7 @@
   <view class="article-detail">
     <NavBar title="文章详情" />
 
-    <template v-if="article">
+    <view v-if="article" class="article-content-wrap">
       <view class="article-header">
         <text class="detail-title">{{ article.title }}</text>
         <view class="author-row">
@@ -42,16 +42,16 @@
       </view>
 
       <view class="action-row">
-        <view class="action-btn" :class="{ active: isLiked, 'active-like': isLiked }" @click="handleLike">
+        <view class="action-btn" :class="isLiked ? 'active-like' : ''" @click="handleLike">
           <text class="action-btn__icon">{{ isLiked ? '❤' : '🤍' }}</text>
           <text class="action-btn__text">{{ isLiked ? '已赞' : '点赞' }}</text>
         </view>
-        <view class="action-btn" :class="{ active: isFavorited, 'active-fav': isFavorited }" @click="handleFavorite">
+        <view class="action-btn" :class="isFavorited ? 'active-fav' : ''" @click="handleFavorite">
           <text class="action-btn__icon">{{ isFavorited ? '⭐' : '☆' }}</text>
           <text class="action-btn__text">{{ isFavorited ? '已藏' : '收藏' }}</text>
         </view>
       </view>
-    </template>
+    </view>
 
     <view v-else class="loading-center">
       <text class="loading-center__text">加载中...</text>
@@ -114,9 +114,9 @@ async function handleLike() {
   try {
     const res = await toggleLike(currentId)
     const wasLiked = isLiked.value
-    isLiked.value = res.data?.liked ?? !wasLiked
+    isLiked.value = (res.data && res.data.liked) !== undefined ? res.data.liked : !wasLiked
     if (article.value) {
-      article.value.likeCount = res.data?.likeCount ?? (article.value.likeCount + (isLiked.value ? 1 : -1))
+      article.value.likeCount = (res.data && res.data.likeCount) !== undefined ? res.data.likeCount : (article.value.likeCount + (isLiked.value ? 1 : -1))
     }
   } catch (e) {
     // 错误由拦截器处理
@@ -128,9 +128,9 @@ async function handleFavorite() {
   try {
     const res = await toggleFavorite(currentId)
     const wasFavorited = isFavorited.value
-    isFavorited.value = res.data?.favorited ?? !wasFavorited
+    isFavorited.value = (res.data && res.data.favorited) !== undefined ? res.data.favorited : !wasFavorited
     if (article.value) {
-      article.value.favoriteCount = res.data?.favoriteCount ?? (article.value.favoriteCount + (isFavorited.value ? 1 : -1))
+      article.value.favoriteCount = (res.data && res.data.favoriteCount) !== undefined ? res.data.favoriteCount : (article.value.favoriteCount + (isFavorited.value ? 1 : -1))
     }
   } catch (e) {
     // 错误由拦截器处理

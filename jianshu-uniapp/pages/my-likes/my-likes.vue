@@ -49,15 +49,15 @@ function getArticle(item) {
 }
 
 function getArticleId(item) {
-  return item.article?.id || item.id
+  return item.article && item.article.id || item.id
 }
 
 async function fetchPage() {
   try {
     const res = await getMyLikedArticles({ page: page.value, size: 10 })
-    const records = res.data?.records || []
+    const records = res.data && res.data.records || []
     articleList.value.push(...records)
-    const total = res.data?.total || 0
+    const total = res.data && res.data.total || 0
     if (articleList.value.length >= total || records.length < 10) {
       finished.value = true
     } else {
